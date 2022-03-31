@@ -13,6 +13,9 @@ var currentDayEl = $('#currentDay')
  * DECLARING GLOBAL SCOPE VARIABLES
  * ========================================================================= */
 
+// this will hold the local storage data as a global variable
+// that the application can pass data to and from before re-commiting
+// data transfer back to local storage
 var schedule;
 
 /* =========================================================================
@@ -23,8 +26,6 @@ var schedule;
 // if it doesn't exist, a blank one will be created and used to populate
 // the page
 function grabSchedule () {
-    // create local variable for the schedule
-    var currentTime = moment('HH');
     // check for an existing schedule
     if (window.localStorage.getItem('currentSchedule') === null) {
         // if it doesn't exist, create this blank one
@@ -32,47 +33,47 @@ function grabSchedule () {
             {
                 indexNumber: 0,
                 timeSlot: "9:00am",
-                dateTime:  moment('09', 'HH'),
+                dateTime:  moment('09', 'HH'), // 24 hour clock
                 event: ''
             }, { 
                 indexNumber: 1, 
                 timeSlot: "10:00am",
-                dateTime:  moment('10', 'HH'),
+                dateTime:  moment('10', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 2,
                 timeSlot: "11:00am",
-                dateTime:  moment('11', 'HH'),
+                dateTime:  moment('11', 'HH'), // 24 hour clock
                 event: ''
             }, { 
                 indexNumber: 3,
                 timeSlot: "12:00pm",
-                dateTime:  moment('12', 'HH'),
+                dateTime:  moment('12', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 4,
                 timeSlot: "1:00pm",
-                dateTime:  moment('13', 'HH'),
+                dateTime:  moment('13', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 5,
                 timeSlot: "2:00pm",
-                dateTime:  moment('14', 'HH'),
+                dateTime:  moment('14', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 6,
                 timeSlot: "3:00pm",
-                dateTime:  moment('15', 'HH'),
+                dateTime:  moment('15', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 7,
                 timeSlot: "4:00pm",
-                dateTime:  moment('16', 'HH'),
+                dateTime:  moment('16', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 8,
                 timeSlot: "5:00pm",
-                dateTime:  moment('17', 'HH'),
+                dateTime:  moment('17', 'HH'), // 24 hour clock
                 event: ''
             }
         ]);
@@ -88,6 +89,9 @@ function grabSchedule () {
 // page population using the array of objects representing each our of
 // a work day as modified by the end user
 function populatePage () {
+    // create local variable for the schedule to compare against
+    // as it populates the page with conditionally formatted divs
+    var currentTime = moment('HH');
     // iterate through these objects and create the HTML elements
     // to populate the page
     for (i = 0; i < schedule.lenght; i++) {
@@ -163,6 +167,8 @@ function populatePage () {
     };
 };
 
+// a function used to commit schedule changes to local storage
+// when the user click on the save icon button
 function saveMyEvent (event) {
     // TODO:
     /* pseudocode below
