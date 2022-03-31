@@ -26,61 +26,64 @@ var schedule;
 // if it doesn't exist, a blank one will be created and used to populate
 // the page
 function grabSchedule () {
+    var userSchedule;
     // check for an existing schedule
-    if (window.localStorage.getItem('currentSchedule') === null) {
+    if (window.localStorage.getItem('userSchedule') === null) {
         // if it doesn't exist, create this blank one
-        userSchedule = window.localStorage.setItem('currentSchedule', [
+        userSchedule = [
             {
                 indexNumber: 0,
                 timeSlot: "9:00am",
-                dateTime:  moment('09', 'HH'), // 24 hour clock
+                dateTime:  moment().format('09', 'HH'), // 24 hour clock
                 event: ''
             }, { 
                 indexNumber: 1, 
                 timeSlot: "10:00am",
-                dateTime:  moment('10', 'HH'), // 24 hour clock
+                dateTime:  moment().format('10', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 2,
                 timeSlot: "11:00am",
-                dateTime:  moment('11', 'HH'), // 24 hour clock
+                dateTime:  moment().format('11', 'HH'), // 24 hour clock
                 event: ''
             }, { 
                 indexNumber: 3,
                 timeSlot: "12:00pm",
-                dateTime:  moment('12', 'HH'), // 24 hour clock
+                dateTime:  moment().format('12', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 4,
                 timeSlot: "1:00pm",
-                dateTime:  moment('13', 'HH'), // 24 hour clock
+                dateTime:  moment().format('13', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 5,
                 timeSlot: "2:00pm",
-                dateTime:  moment('14', 'HH'), // 24 hour clock
+                dateTime:  moment().format('14', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 6,
                 timeSlot: "3:00pm",
-                dateTime:  moment('15', 'HH'), // 24 hour clock
+                dateTime:  moment().format('15', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 7,
                 timeSlot: "4:00pm",
-                dateTime:  moment('16', 'HH'), // 24 hour clock
+                dateTime:  moment().format('16', 'HH'), // 24 hour clock
                 event: ''
             }, {
                 indexNumber: 8,
                 timeSlot: "5:00pm",
-                dateTime:  moment('17', 'HH'), // 24 hour clock
+                dateTime:  moment().format('17', 'HH'), // 24 hour clock
                 event: ''
             }
-        ]);
+        ];
+        var userScheduleJSON = JSON.stringify(userSchedule);
+        window.localStorage.setItem('userSchedule', userScheduleJSON);
         return userSchedule
     } else {
         // since one exists, lets parse the JSON and get objects we can work with
-        userSchedule = JSON.parse(window.localStorage.getItem('savedSchedule'));
+        userSchedule = JSON.parse(window.localStorage.getItem('userSchedule'));
         return userSchedule
     };
 };
@@ -202,7 +205,8 @@ function saveMyEvent (event) {
 // data or creates the data we need as a starting point
 // if none already exists
 schedule = grabSchedule();
-
+console.log(schedule)
+;
 // format: Thursday March 31st 2022 3:29:45pm - displays at top of page
 currentDayEl.text(moment().format('dddd MMMM Do YYYY h:mm:ssa'));
 
