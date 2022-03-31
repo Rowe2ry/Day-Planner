@@ -84,12 +84,22 @@ textarea {
   display:flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.saveBtn:hover {
+
+  transition: all 0.3s ease-in-out;
+  min-height: 11vh;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3cd2f4;
 }
 
 .saveBtn i:hover {
   font-size: 20px;
   transition: all 0.3s ease-in-out;
-  min-height: 11vh;
 }
 
 .deDecorated {
@@ -99,4 +109,32 @@ textarea {
   color: white;
   border: none;
   font-weight: bold;
+}
+
+#key {
+  font-weight:bold;
+  font-size: 1.325rem;
+}
+
+#past {
+  background-color: #d3d3d3;
+  padding: .125em .375em;;
+  margin: 0 .125em;
+  border-radius:.25em;
+}
+
+
+#present {
+  background-color: #ff6961;
+  padding: .125em .375em;;
+  margin: 0 .125em;
+  border-radius:.25em;
+}
+
+
+#future {
+  background-color: #77dd77;
+  padding: .125em .375em;;
+  margin: 0 .125em;
+  border-radius:.25em;
 }
