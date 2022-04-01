@@ -2,12 +2,10 @@
  * GRABBING DOM ELEMENTS USING JQUERY
  * ========================================================================= */
 
-var scheduleContainerEl = $('.container')
-var hourLabelEl = $('.hour');
-// var timeBlockEl = $('.col-md-10');
-var timeBlockInputEl = $('.deDecorated');
-var saveButtonEl = $('.saveBtn');
-var currentDayEl = $('#currentDay')
+var resetBtn = $('#resetBtn');
+var scheduleContainerEl = $('.container');
+var currentDayEl = $('#currentDay');
+var userSchedule;
 
 /* =========================================================================
  * DECLARING GLOBAL SCOPE VARIABLES
@@ -26,7 +24,6 @@ var schedule;
 // if it doesn't exist, a blank one will be created and used to populate
 // the page
 function grabSchedule () {
-    var userSchedule;
     // check for an existing schedule
     if (window.localStorage.getItem('userSchedule') === null) {
         // if it doesn't exist, create this blank one
@@ -94,22 +91,23 @@ function grabSchedule () {
 function populatePage () {
     // create local variable for the schedule to compare against
     // as it populates the page with conditionally formatted divs
-    var currentTime = moment('HH');
+    var currentTime = moment().format('HH');
     // iterate through these objects and create the HTML elements
     // to populate the page
-    for (i = 0; i < schedule.lenght; i++) {
+    console.log(schedule.length);
+    for (var i = 0; i < schedule.length; i++) {
         // baseline condition for this loop
         var conditionalFormatting = 'present';
         // create a parent div for all of the content
-        var timeBlockEl = document.createElement('div');
+        var timeBlockEl = $('<div>');
         // give classes adhering to bootstrap formatting
-        timeBlockEl.setAttribute('class', 'time-block row');
+        timeBlockEl.addClass('time-block row');
         // create the first child div for holding the hour
-        var hourMarker = document.createElement('div');
+        var hourMarker = $('<div>');
         // give classes to adhere ot Bootstrap formatting
-        hourMarker.setAttribute('class', 'hour col-md-1 align-self-center');
+        hourMarker.addClass('hour col-md-1 align-self-center');
         // put in the time key from the object in the array
-        hourMarker.textContent = schedule[i].timeSlot;
+        hourMarker.text(schedule[i].timeSlot);
         // check to see if the object we are looking at is from ahead of,
         // behind, or equal to the current hour on a 24 hour clock
         if (currentTime > schedule[i].dateTime) {
@@ -123,38 +121,38 @@ function populatePage () {
             conditionalFormatting = 'present';
         };
         // making the div parent to hold the input field
-        var eventHolder = document.createElement('div');
+        var eventHolder = $('<div>');
         // giving the div classes with conditional formatting for color
-        eventHolder.setAttribute('class', conditionalFormatting + ' col-md-10 align-self-center');
+        eventHolder.addClass(conditionalFormatting + ' col-md-10 align-self-center');
         // create the input field
-        var theEvent = document.createElement('input');
+        var theEvent = $('<input>');
         // give it the styling classes
-        theEvent.setAttribute('class', 'deDecorated');
+        theEvent.addClass('deDecorated');
         // make sure its a text input
-        theEvent.setAttribute('type', 'text');
+        theEvent.attr('type', 'text');
         // put a placeholder so users know how/where to interact with it
-        theEvent.setAttribute('placeholder', 'empty time slot - click to change');
+        theEvent.attr('placeholder', 'empty time slot - click to change');
         // give this an index number on HTML page will make it easier to update the
         // local storage JSON
-        theEvent.setAttribute('data-index', i);
-        // if the user has saved an event here, it will not be empty so....
-        if (schedule[i].event != ''){
-            // put the user's text here
-            theEvent.textContent = schedule[i].event;
-        };
+        theEvent.attr('data-index', i);
+        // if the user has saved an event here, 
+        // put the user's text here
+        theEvent.attr('value', schedule[i].event);
         // parent holder for the save icon
-        var saveDivEl = document.createElement('div');
+        var saveDivEl = $('<div>');
         // give it the styling classes
-        saveDivEl.setAttribute('class', 'saveBtn col-md-1 align-self-center');
+        saveDivEl.addClass('saveBtn col-md-1 align-self-center');
         // putting data on this div to be read by the event listener for
         // linking the save button to the input field on the page as well
         // as the object index number in the JSON being held in
         // local storage
-        saveDivEl.setAttribute('data-index', i);
+        saveDivEl.attr('data-save', i);
         // create the icon tag required by the fontawesome library
-        var saveIcon = document.createElement('i');
+        var saveIcon = $('<i>');
         // apply the classes used by fontawesome to show a save icon
-        saveIcon.setAttribute('class', 'fa-solid fa-floppy-disk');
+        saveIcon.addClass('fa-solid fa-floppy-disk');
+        // giving the index number to the icon itself just in case
+        saveIcon.attr('data-save', i);
         // put this parent container on the page under the appropriate parent
         scheduleContainerEl.append(timeBlockEl);
         // add the hour marker element (first object in the row)
@@ -170,33 +168,54 @@ function populatePage () {
     };
 };
 
-// a function used to commit schedule changes to local storage
-// when the user click on the save icon button
-function saveMyEvent (event) {
-    // TODO:
-    /* pseudocode below
-     * look at the event target (save icon div)
-     * grab this event target's dataset.index
-     * find the input element with the same dataset index
-     * assign a variable the string typed into the input element
-     * grab the whole schedule from local storage
-     * parse the JSON into an object
-     * target the object whose index # matches this targe's
-     * update the object's "time" key to a value of the local
-     *    scope variable holding the user's string
-     * stringify full array of objects back to JSON
-     * save to local storage
-     * repopulate the page using the new array
-     */ 
-};
-
 /* =========================================================================
  * ACTIVE EVENT LISTENERS
  * ========================================================================= */
 
-saveButtonEl.on('click', function () {
-    saveMyEvent();
-};
+// if someone clicks on any save icon, grab the index number and pass to the
+// function to save to local storage
+scheduleContainerEl.on('click', '.saveBtn', function (event) {
+    // get index number from clicked save icon's `data-save` attribute
+    var localIndex = ($(event.target).attr('data-save'));
+    // tracking function progression
+    console.log(" This is save button " + localIndex);
+    // grab all 8 input fields as a node list
+    var localInput = document.querySelectorAll("input");
+    // go to the node list index matching the save button
+    localInput = localInput[localIndex];
+    // verify the HTML element targetted in the console
+    console.log(localInput);
+    // grab what the user has entered and assign this as the value to our variable
+    var usersEvent = localInput.value
+    // verify that it has grabbed the right content
+    console.log(usersEvent);
+    // pull out our local storage array of objects and convert to a
+    // function Javascript object
+    var tempSchedule = JSON.parse(window.localStorage.getItem('userSchedule'));
+    // update the event key with a new value for the matched object index
+    tempSchedule[localIndex].event = usersEvent;
+    // re-package our functional object into a JSON string
+    var tempScheduleJSON = JSON.stringify(tempSchedule);
+    // save it back into local storage
+    window.localStorage.setItem('userSchedule', tempScheduleJSON);
+  });
+
+resetBtn.on('click', function () {
+    console.log("resetting schedule");
+    // pull out our local storage array of objects and convert to a
+    // function Javascript object
+    var tempSchedule = JSON.parse(window.localStorage.getItem('userSchedule'));
+    //iterate through the 8 hour time slots and make all of the events blank
+    for (var i = 0; i < 8; i++) {
+    // update the event key with a new value for the matched object index
+        tempSchedule[i].event = '';
+    };
+    // re-package our functional object into a JSON string
+    var tempScheduleJSON = JSON.stringify(tempSchedule);
+    // save it back into local storage
+    window.localStorage.setItem('userSchedule', tempScheduleJSON);
+    document. location. reload()
+});
 
 /* =========================================================================
  * FUNCTION CALLS AND PAGE LOAD LOGIC EXECUTION
@@ -216,4 +235,5 @@ setInterval(function () {
 currentDayEl.text(moment().format('dddd MMMM Do YYYY h:mm:ssa'));
 }, 1000);
 
-//TODO: call the populate page function
+// call the populate page function to put the schedule onto the page
+populatePage ();
