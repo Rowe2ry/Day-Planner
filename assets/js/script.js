@@ -2,17 +2,18 @@
  * GRABBING DOM ELEMENTS USING JQUERY
  * ========================================================================= */
 
-var resetBtn = $('#resetBtn');
-var scheduleContainerEl = $('.container');
-var currentDayEl = $('#currentDay');
-var userSchedule;
+var resetBtn = $('#resetBtn'); // by ID
+var scheduleContainerEl = $('.container'); // by class 
+var currentDayEl = $('#currentDay'); // by ID
+var userSchedule; // this gets defined into a node list with "querySelectorAll"
+                    // later in a function
 
 /* =========================================================================
  * DECLARING GLOBAL SCOPE VARIABLES
  * ========================================================================= */
 
 // this will hold the local storage data as a global variable
-// that the application can pass data to and from before re-commiting
+// that the application can pass data to and from before re-committing
 // data transfer back to local storage
 var schedule;
 
@@ -75,18 +76,22 @@ function grabSchedule () {
                 event: ''
             }
         ];
+        // transform this object array into a JSON string
         var userScheduleJSON = JSON.stringify(userSchedule);
+        // save it to local storage
         window.localStorage.setItem('userSchedule', userScheduleJSON);
+        // keep the working item in native Javascript object format for populatePage
         return userSchedule
     } else {
         // since one exists, lets parse the JSON and get objects we can work with
         userSchedule = JSON.parse(window.localStorage.getItem('userSchedule'));
+        // send the locally stored schedule to the populate page function
         return userSchedule
     };
 };
 
 
-// page population using the array of objects representing each our of
+// page population using the array of objects representing each hour of
 // a work day as modified by the end user
 function populatePage () {
     // create local variable for the schedule to compare against
@@ -106,7 +111,7 @@ function populatePage () {
         var hourMarker = $('<div>');
         // give classes to adhere ot Bootstrap formatting
         hourMarker.addClass('hour col-md-1 align-self-center');
-        // put in the time key from the object in the array
+        // put in the "time" key from the object in the array
         hourMarker.text(schedule[i].timeSlot);
         // check to see if the object we are looking at is from ahead of,
         // behind, or equal to the current hour on a 24 hour clock
@@ -137,6 +142,8 @@ function populatePage () {
         theEvent.attr('data-index', i);
         // if the user has saved an event here, 
         // put the user's text here
+        // not an if statement because the default state is an empty
+        // string, which will display the placeholder text
         theEvent.attr('value', schedule[i].event);
         // parent holder for the save icon
         var saveDivEl = $('<div>');
