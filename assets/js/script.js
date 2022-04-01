@@ -3,10 +3,12 @@
  * ========================================================================= */
 
 var resetBtn = $('#resetBtn'); // by ID
-var scheduleContainerEl = $('.container'); // by class 
-var currentDayEl = $('#currentDay'); // by ID
-var userSchedule; // this gets defined into a node list with "querySelectorAll"
-                    // later in a function
+var scheduleContainerEl = $('.container'); // by class - where all of the populate page contents go
+var currentDayEl = $('#currentDay'); // by ID - used to put live updating date & time
+        // on top of page 
+var userSchedule; // this is declared globally just because it is defined and
+        // returned out of several functions in the script, I thought this might be
+        // better than defining it locally in 2 or 3 different functions
 
 /* =========================================================================
  * DECLARING GLOBAL SCOPE VARIABLES
@@ -27,7 +29,7 @@ var schedule;
 function grabSchedule () {
     // check for an existing schedule
     if (window.localStorage.getItem('userSchedule') === null) {
-        // if it doesn't exist, create this blank one
+        // if it doesn't exist, create this blank one (array of objects)
         userSchedule = [
             {
                 indexNumber: 0,
@@ -189,8 +191,10 @@ scheduleContainerEl.on('click', '.saveBtn', function (event) {
     // grab all 8 input fields as a node list
     var localInput = document.querySelectorAll("input");
     // go to the node list index matching the save button
+    // in other words, grab the input field located in the
+    // same row as THIS save button that was clicked
     localInput = localInput[localIndex];
-    // verify the HTML element targetted in the console
+    // verify which HTML element has been targeted in the console
     console.log(localInput);
     // grab what the user has entered and assign this as the value to our variable
     var usersEvent = localInput.value
@@ -207,6 +211,7 @@ scheduleContainerEl.on('click', '.saveBtn', function (event) {
     window.localStorage.setItem('userSchedule', tempScheduleJSON);
   });
 
+  // I added a reset button if the users wants a blank slate for the new day
 resetBtn.on('click', function () {
     // this will empty out the schedule, so I am giving users a chance to
     // decide not to in case the button click was a mistake
@@ -227,7 +232,7 @@ resetBtn.on('click', function () {
     // save it back into local storage
     window.localStorage.setItem('userSchedule', tempScheduleJSON);
     // reload the page to show the cleared schedule
-    document. location. reload()
+    document.location.reload()
 });
 
 /* =========================================================================
@@ -238,8 +243,8 @@ resetBtn.on('click', function () {
 // data or creates the data we need as a starting point
 // if none already exists
 schedule = grabSchedule();
-console.log(schedule)
-;
+console.log(schedule);
+
 // format: Thursday March 31st 2022 3:29:45pm - displays at top of page
 currentDayEl.text(moment().format('dddd MMMM Do YYYY h:mm:ssa'));
 
