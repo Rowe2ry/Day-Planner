@@ -194,8 +194,9 @@ function saveMyEvent (event) {
  * ACTIVE EVENT LISTENERS
  * ========================================================================= */
 
-//TODO: create the event listener that targets all of the save
-// icon divs and calls the "saveMyEvent" function on a click
+saveButtonEl.on('click', function () {
+    saveMyEvent();
+};
 
 /* =========================================================================
  * FUNCTION CALLS AND PAGE LOAD LOGIC EXECUTION
