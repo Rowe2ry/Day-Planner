@@ -6,9 +6,6 @@ var resetBtn = $('#resetBtn'); // by ID
 var scheduleContainerEl = $('.container'); // by class - where all of the populate page contents go
 var currentDayEl = $('#currentDay'); // by ID - used to put live updating date & time
         // on top of page 
-var userSchedule; // this is declared globally just because it is defined and
-        // returned out of several functions in the script, I thought this might be
-        // better than defining it locally in 2 or 3 different functions
 
 /* =========================================================================
  * DECLARING GLOBAL SCOPE VARIABLES
@@ -18,6 +15,10 @@ var userSchedule; // this is declared globally just because it is defined and
 // that the application can pass data to and from before re-committing
 // data transfer back to local storage
 var schedule;
+
+var userSchedule; // this is declared globally just because it is defined and
+        // returned out of several functions in the script, I thought this might be
+        // better than defining it locally in 2 or 3 different functions
 
 /* =========================================================================
  * FUNCTION DEFINITIONS
