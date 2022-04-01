@@ -201,6 +201,11 @@ scheduleContainerEl.on('click', '.saveBtn', function (event) {
   });
 
 resetBtn.on('click', function () {
+    // this will empty out the schedule, so I am giving users a chance to
+    // decide not to in case the button click was a mistake
+    if (!window.confirm("Are you sure you want to reset this schedule?")) {
+        return;
+    }
     console.log("resetting schedule");
     // pull out our local storage array of objects and convert to a
     // function Javascript object
@@ -214,6 +219,7 @@ resetBtn.on('click', function () {
     var tempScheduleJSON = JSON.stringify(tempSchedule);
     // save it back into local storage
     window.localStorage.setItem('userSchedule', tempScheduleJSON);
+    // reload the page to show the cleared schedule
     document. location. reload()
 });
 
